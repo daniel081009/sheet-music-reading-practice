@@ -7,3 +7,9 @@
 ## 작업일지
 ---
 javascript 오디오 api 이용해서 하면 될 듯 한데 찾아봐야 한다.
+
+https://github.com/qiuxiang/tuner 여기 참고해도 될 듯 하다
+
+--- 
+
+이제 음을 인식할 수 있다.
