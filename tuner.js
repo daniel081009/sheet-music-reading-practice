@@ -53,8 +53,8 @@ Tuner.prototype.initGetUserMedia = function () {
     };
   }
 };
+Tuner.prototype.runfunc = null;
 
-let old = "";
 Tuner.prototype.startRecord = function () {
   const self = this;
   navigator.mediaDevices
@@ -68,9 +68,8 @@ Tuner.prototype.startRecord = function () {
           event.inputBuffer.getChannelData(0)
         );
         const note = self.getNote(frequency);
-        if (frequency && old != self.noteStrings[note % 12]) {
-          old = self.noteStrings[note % 12];
-          console.log({
+        if (frequency) {
+          self.runfunc({
             name: self.noteStrings[note % 12],
             value: note,
             cents: self.getCents(frequency, note),
@@ -86,7 +85,7 @@ Tuner.prototype.startRecord = function () {
 };
 
 Tuner.prototype.init = function () {
-  this.audioContext = new AudioContext();
+  this.audioContext = new window.AudioContext();
   this.audioContext.resume();
   this.analyser = this.audioContext.createAnalyser();
   this.scriptProcessor = this.audioContext.createScriptProcessor(

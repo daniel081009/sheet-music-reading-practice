@@ -6,17 +6,106 @@
       name="viewport"
       content="width=device-width,initial-scale=1,user-scalable=no"
     />
-    <title>Online Tuner</title>
+    <title>음표 연습</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <script src="tuner.js"></script>
+    <div id="gol">0</div>
+    <div id="boo"></div>
   </body>
+  <style>
+    body {
+      display: flex;
+      width: 100vw;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #gol {
+      font-size: 10rem;
+    }
+    #boo {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script src="tuner.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aubiojs@0.1.1/build/aubio.min.js"></script>
+  <script src="https://unpkg.com/vexflow/releases/vexflow-min.js"></script>
+  <script>
+    let start = false;
+    function renderb(daad) {
+      console.log(daad);
+      const VF = Vex.Flow;
+      const div = document.getElementById("boo");
+
+      const renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+      renderer.resize(500, 500);
+
+      const context = renderer.getContext();
+      context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+
+      const stave = new VF.Stave(100, 100, 300);
+      stave
+        .addClef("treble")
+        .addTimeSignature("4/4")
+        .setContext(context)
+        .draw();
+      // 음표 생성
+      const note = new VF.StaveNote({
+        keys: [daad],
+        duration: "q",
+      });
+
+      // 음표를 악보에 추가
+      const voice = new VF.Voice({ num_beats: 1, beat_value: 4 });
+      voice.addTickables([note]);
+
+      const formatter = new VF.Formatter()
+        .joinVoices([voice])
+        .format([voice], 250);
+
+      if (start) {
+        document.querySelector("#boo > svg:nth-child(1)").remove();
+      }
+      voice.draw(context, stave);
+      start = true;
+    }
+  </script>
+  <script>
+    let gole = 0;
+    let pro = {};
+    function check(note) {
+      console.log(note.name == pro.name, note.octave == pro.octave);
+      if (note.name == pro.name && note.octave == pro.octave) {
+        gole++;
+        document.getElementById("gol").innerText = gole;
+
+        nextpro();
+      }
+    }
+    let list = ["C", "D", "E", "F", "G", "A", "B"];
+    let l = [4];
+    function nextpro() {
+      pro = {
+        name: list[Math.floor(Math.random() * 7)],
+        octave: l[Math.floor(Math.random() * 1)],
+      };
+      console.log("next", pro);
+      renderb(pro.name + "/" + pro.octave);
+    }
+    nextpro();
+  </script>
+
   <script>
     document.addEventListener("click", function () {
       const tuner = new Tuner(440);
 
       tuner.init();
+      tuner.runfunc = function (note) {
+        check(note);
+        console.log(note);
+      };
       tuner.audioContext.resume().then(() => {
         tuner.startRecord();
       });

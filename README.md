@@ -8,8 +8,11 @@
 ---
 javascript 오디오 api 이용해서 하면 될 듯 한데 찾아봐야 한다.
 
-https://github.com/qiuxiang/tuner 여기 참고해도 될 듯 하다
+https://github.com/qiuxiang/tuner 여기 참고해도 될 듯 하다.
 
---- 
+이제 음을 인식할 수 있다. 
 
-이제 음을 인식할 수 있다.
+vexflow로 악보를 표시한다. 초기화를 시키느라 하드코딩 되었다.
+
+어설프지만 완성했다...!
+
